@@ -34,3 +34,30 @@ pokeApi.getPokemons = (offset = 0, limit = 5) => {
     .catch((error) => console.error(error))
     .finally(() => console.log("Requisição Concluída")); //opcional
 };
+
+pokeApi.getPokemonFullDetails = (pokemonId) => {
+  const pokemonUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonId}`;
+  const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`;
+
+  return Promise.all([
+    fetch(pokemonUrl).then((res) => res.json()),
+    fetch(speciesUrl).then((res) => res.json()),
+  ]).then(([pokemon, species]) => {
+
+    const genusEn = species.genera.find((g) => g.language.name === "en")?.genus || "Unknown";
+    const cleanedGenus = genusEn.replace("Pokémon", "").trim();
+
+    return {
+      number: pokemon.id,
+      name: pokemon.name,
+      types: pokemon.types.map((t) => t.type.name),
+      stats: pokemon.stats,
+      photo: pokemon.sprites.other.dream_world.front_default,
+      abilities: pokemon.abilities,
+      height: pokemon.height,
+      weight: pokemon.weight,
+      moves: pokemon.moves.slice(0, 10), // primeiros 10
+      genus: cleanedGenus,
+    };
+  });
+};
