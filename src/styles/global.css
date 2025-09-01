@@ -5,6 +5,7 @@
 
 body {
   background-color: #f6f8fc;
+  background-image: "assets/images/pokeball-background.png";
 }
 
 .content {
@@ -12,6 +13,10 @@ body {
   background-color: #fff;
   height: 100vh;
   width: 100vw;
+}
+
+.hidden {
+  display: none;
 }
 
 @media screen and (min-width: 992px) {
