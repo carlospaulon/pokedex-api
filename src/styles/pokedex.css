@@ -84,11 +84,17 @@
   padding: 1rem;
   margin: 0.5rem;
   border-radius: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease, fill 0.3s ease, filter 0.3s ease;
+}
+
+.pokemon:hover {
+  transform: translateY(-3px) scale(1.1);
 }
 
 .logo {
   display: flex;
-  width: 200px;
+  width: 300px;
   margin: 0 0 1rem 0.5rem 
 
 }
@@ -167,7 +173,7 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
-  width: 30%;
+  width: 10%;
 }
 
 #pokemonTypes {
@@ -245,6 +251,41 @@
 .stat-fill {
   height: 100%;
   background: #4caf50;
+}
+
+.evolution-chain {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding: 1rem;
+    background-color: white;
+}
+
+.evolution-chain {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    
+}
+
+.evolution-chain img {
+    width: 120px;
+    height: 120px;
+}
+
+.evolution-chain p {
+    text-transform: capitalize;
+    margin: 0.5rem 0;
+}
+
+.evolution-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #666;
 }
 
 .pokemon-info {
