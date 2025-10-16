@@ -25,7 +25,40 @@ function renderPokemonHeader(pokemon) {
   detailsView.className = `pokemon-details ${pokemon.types[0]}`;
 }
 
-function showTab(tabName) {
+async function getEvolutionChain(evolutionUrl) {
+  const response = await fetch(evolutionUrl);
+  const data = await response.json();
+  return data;
+}
+
+function processEvolutionChain(evolutionData) {
+  const evolutionChain = [];
+  let currentStage = evolutionData.chain;
+
+  while (currentStage) {
+    const speciesUrl = currentStage.species.url;
+    const parts = speciesUrl.split("/");
+    const id = parts[parts.length - 2];
+    const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${id}.svg`;
+
+    evolutionChain.push({
+      name: currentStage.species.name,
+      image: imageUrl,
+    });
+
+    if (currentStage.evolves_to.length > 0) {
+      currentStage = currentStage.evolves_to[0];
+    } else {
+      break;
+    }
+  }
+  console.log(evolutionChain);
+
+  return evolutionChain;
+}
+
+//opções
+async function showTab(tabName) {
   document.querySelectorAll(".tab").forEach((tab) => {
     tab.classList.remove("active");
   });
@@ -41,7 +74,11 @@ function showTab(tabName) {
       content.innerHTML = renderStats(currentPokemon);
       break;
     case "evolution":
-      content.innerHTML = "<p>Evolution em desenvolvimento...</p>";
+      const evolutionData = await getEvolutionChain(
+        currentPokemon.evolutionUrl
+      );
+      const processedChain = processEvolutionChain(evolutionData);
+      content.innerHTML = renderEvolution(processedChain);
       break;
     case "moves":
       content.innerHTML = renderMoves(currentPokemon);
@@ -49,6 +86,7 @@ function showTab(tabName) {
   }
 }
 
+//funções das opções de detalhes
 function renderAbout(pokemon) {
   return `
 <div class="about-info">
@@ -82,15 +120,31 @@ function renderStats(pokemon) {
   `;
 }
 
-function renderEvolution(pokemon) {
-
+function renderEvolution(evolutionChain) {
+  return `
+    <div class="evolution-chain">
+      ${evolutionChain
+        .map(
+          (evolution, index) => `
+        <div class="evolution-stage">
+          <img src="${evolution.image}" alt="${evolution.name}">
+          <p>${evolution.name}</p>
+        </div>
+        ${index < evolutionChain.length - 1 ? '<span class="arrow">→</span>' : ""}
+        `
+        )
+        .join("")}
+    </div>
+  `;
 }
 
 function renderMoves(pokemon) {
   return `
     <div class="moves-list">
      
-      ${pokemon.moves.map((move) => `<p class="moves">${move.move.name}</p>`).join("")}
+      ${pokemon.moves
+        .map((move) => `<p class="moves">${move.move.name}</p>`)
+        .join("")}
     </div>
   `;
 }

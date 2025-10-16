@@ -38,6 +38,7 @@ pokeApi.getPokemons = (offset = 0, limit = 5) => {
 pokeApi.getPokemonFullDetails = (pokemonId) => {
   const pokemonUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonId}`;
   const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`;
+  
 
   return Promise.all([
     fetch(pokemonUrl).then((res) => res.json()),
@@ -58,6 +59,7 @@ pokeApi.getPokemonFullDetails = (pokemonId) => {
       weight: pokemon.weight,
       moves: pokemon.moves.slice(0, 10), // primeiros 10
       genus: cleanedGenus,
+      evolutionUrl: species.evolution_chain.url,
     };
   });
 };
